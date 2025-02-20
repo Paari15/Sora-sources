@@ -1,16 +1,11 @@
 {
-    "sourceName": "iOSMirror",
-    "iconUrl": "https://iosmirror.cc/favicon.ico",
-    "author": {
-        "name": "Paari",
-        "icon": "https://example.com/my-icon.png"
-    },
-    "version": "1.0.0",
-    "language": "English",
-    "streamType": "HLS",
-    "quality": "720p",
-    "baseUrl": "https://iosmirror.cc/",
-    "searchBaseUrl": "https://iosmirror.cc/search.php?s=%s",
-    "scriptUrl": "https://raw.githubusercontent.com/paari/modules/main/iosmirror.js",
-    "asyncJS": true
+  "name": "iOSMirror",
+  "type": "stream",
+  "search": "search.js",
+  "extractors": [
+    {
+      "pattern": "https://iosmirror.cc/post.php?id=*",
+      "script": "extract.js"
+    }
+  ]
 }
