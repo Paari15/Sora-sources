@@ -2,18 +2,19 @@ async function searchResults(keyword) {
     try {
         const encodedKeyword = encodeURIComponent(keyword);
         const timestamp = Math.floor(Date.now() / 1000);
+        
         const response = await fetch(`https://iosmirror.cc/search.php?s=${encodedKeyword}&t=${timestamp}`);
         const data = await response.json();
 
-        if (!Array.isArray(data)) {
+        if (!data.searchResult || !Array.isArray(data.searchResult)) {
             console.log("Unexpected search response:", data);
             return JSON.stringify([{ title: 'Error: Unexpected Search Format', image: '', href: '' }]);
         }
 
-        const transformedResults = data.map(movie => ({
-            title: movie.title || "Unknown",
-            image: movie.image || "https://iosmirror.cc/default-image.png",
-            href: `https://iosmirror.cc/watch/${movie.id}` // Construct movie URL
+        const transformedResults = data.searchResult.map(movie => ({
+            title: movie.t || "Unknown",
+            image: "https://iosmirror.cc/default-image.png", // Placeholder image
+            href: `https://iosmirror.cc/watch/${movie.id}`
         }));
 
         return JSON.stringify(transformedResults);
@@ -36,7 +37,8 @@ async function extractDetails(url) {
         const transformedResults = [{
             description: data.description || 'No description available',
             aliases: data.genres ? data.genres.join(', ') : 'No genres available',
-            airdate: `Released: ${data.release_date || 'Unknown'}`
+            airdate: `Released: ${data.release_date || 'Unknown'}`,
+            image: data.image || "https://iosmirror.cc/default-image.png"
         }];
 
         return JSON.stringify(transformedResults);
@@ -45,7 +47,8 @@ async function extractDetails(url) {
         return JSON.stringify([{
             description: 'Error loading description',
             aliases: 'Unknown',
-            airdate: 'Unknown'
+            airdate: 'Unknown',
+            image: "https://iosmirror.cc/default-image.png"
         }]);
     }
 }
